@@ -7,14 +7,13 @@ float Height;
 float MinDia;
 float MaxDia;
 
-uint cuts = 1;
-uint facets = 5;
+uint cuts;
+uint facets;
 
-float angleRange = 0.8f;
+float angleRange;
 
 Console.Write("Pick A seed: ");
 seed = Console.ReadLine();
-Console.WriteLine(seed);
 
 do 
 {
@@ -34,12 +33,17 @@ do
 do
 {
     Console.Write("Pick a number of facets (3 or more): ");
-} while (!uint.TryParse(Console.ReadLine(), out facets) && facets >= 3);
+} while (!uint.TryParse(Console.ReadLine(), out facets) ||facets < 3);
 
 do
 {
     Console.Write("Pick a number of cuts (0 or more): ");
-} while (!uint.TryParse(Console.ReadLine(), out cuts) && cuts >= 0);
+} while (!uint.TryParse(Console.ReadLine(), out cuts) || cuts < 0);
+
+do
+{
+    Console.Write("Pick a range of the angle (0 to 1):");
+} while (!float.TryParse(Console.ReadLine(), out angleRange) || angleRange < 0 || angleRange > 1);
 
 DateTime now = DateTime.Now;
 
@@ -59,7 +63,7 @@ uint vertId = 1;
 for (uint i = 0; i < facets; i++)
 {
     float R = (rand.NextSingle() * (MaxDia  - MinDia) + MinDia) * 0.5f;
-    float Phi = MathF.Tau / facets * (i + rand.NextSingle() - 0.5f) * angleRange;
+    float Phi = MathF.Tau / facets * (i + (rand.NextSingle() - 0.5f) * angleRange);
     vertecies[vertId] = new(R * MathF.Cos(Phi), R * MathF.Sin(Phi), 0);
     vertId++;
 }
@@ -72,7 +76,7 @@ for (int j = 0; j < cuts; j++)
         float Z = ((j == 0 ? -1f : -0.5f) * u + (j == (cuts - 1) ? 1f : 0.5f) * (1f - u) + j + 1) * Height / (cuts + 1);
 
         float R = (rand.NextSingle() * (MaxDia  - MinDia) + MinDia) * 0.5f;
-        float Phi = MathF.Tau / facets * (i + rand.NextSingle() - 0.5f) * angleRange;
+        float Phi = MathF.Tau / facets * (i + (rand.NextSingle() - 0.5f) * angleRange);
         vertecies[vertId] = new(R * MathF.Cos(Phi), R * MathF.Sin(Phi), Z);
         vertId++;
     }
@@ -81,7 +85,7 @@ for (int j = 0; j < cuts; j++)
 for (uint i = 0; i < facets; i++)
 {
     float R = (rand.NextSingle() * (MaxDia  - MinDia) + MinDia) * 0.5f;
-    float Phi = MathF.Tau / facets * (i + rand.NextSingle() - 0.5f) * angleRange;
+    float Phi = MathF.Tau / facets * (i + (rand.NextSingle() - 0.5f) * angleRange);
     vertecies[vertId] = new(R * MathF.Cos(Phi), R * MathF.Sin(Phi), Height);
     vertId++;
 }
@@ -123,7 +127,7 @@ for(uint idx = 0; idx < triCount; idx ++)
 }
 
 
-Console.WriteLine("Pick File Save Location: ");
+Console.Write("Pick File Save Location: ");
 
 string fileName = Console.ReadLine() ?? "";
 
