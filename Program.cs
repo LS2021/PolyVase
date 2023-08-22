@@ -2,6 +2,8 @@
 using System.Text;
 using System.Threading.Tasks.Dataflow;
 
+//Prameters
+
 string? seed;
 float Height;
 float MinDia;
@@ -14,6 +16,8 @@ float angleRange;
 
 Console.Write("Pick A seed: ");
 seed = Console.ReadLine();
+
+//Prompt and get required Inputs
 
 do 
 {
@@ -45,6 +49,7 @@ do
     Console.Write("Pick a range of the angle (0 to 1):");
 } while (!float.TryParse(Console.ReadLine(), out angleRange) || angleRange < 0 || angleRange > 1);
 
+//use current time in case no seed is provided;
 DateTime now = DateTime.Now;
 
 Random rand = new(seed?.GetHashCode() ?? now.ToString().GetHashCode());
@@ -55,6 +60,7 @@ uint triCount = 2 * facets * (cuts + 2);
 Vector3[] vertecies = new Vector3[vertCount];
 (uint A, uint B, uint C, Vector3 n)[] triangles = new (uint, uint, uint, Vector3 n)[triCount];
 
+//calculate vertex positions
 vertecies[0] = Vector3.Zero;
 vertecies[vertCount - 1] = new(0, 0, Height);
 
@@ -72,8 +78,7 @@ for (int j = 0; j < cuts; j++)
 {
     for (uint i = 0; i < facets; i++)
     {
-        float u = rand.NextSingle();
-        float Z = ((j == 0 ? -1f : -0.5f) * u + (j == (cuts - 1) ? 1f : 0.5f) * (1f - u) + j + 1) * Height / (cuts + 1);
+        float Z = (rand.NextSingle() + j + 0.5F) * Height / (cuts + 1);
 
         float R = (rand.NextSingle() * (MaxDia  - MinDia) + MinDia) * 0.5f;
         float Phi = MathF.Tau / facets * (i + (rand.NextSingle() - 0.5f) * angleRange);
@@ -91,6 +96,7 @@ for (uint i = 0; i < facets; i++)
 }
 
 
+//tetermin triangle facets, including face normals.
 uint triId = 0;
 
 for (uint i = 0; i < facets; i++) 
@@ -131,7 +137,9 @@ Console.Write("Pick File Save Location: ");
 
 string fileName = Console.ReadLine() ?? "";
 
-const int stlFileHeadderLength = 80;
+const int stlFileHeadderLength = 80; // stl-header must be exactly 80 bytes long;
+
+//Write mesh data in the binary stl-file format to the output stream.
 
 string headderText = $"seed: {seed}; Facets: {facets}; Cuts: {cuts}";
 byte[] hedderEncoded = Encoding.UTF8.GetBytes(headderText.PadRight(stlFileHeadderLength, '\0') ,0 ,stlFileHeadderLength); // stl-header must be exactly 80 bytes long;
