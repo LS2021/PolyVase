@@ -25,11 +25,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: build win64
-      run: dotnet publish --sc -c Release -r win-x64 -o release/win64
+      run: dotnet publish PolyVase.csproj --sc -c Release -r win-x64 -o release/win64
     - name: build win32
-      run: dotnet publish --sc -c Release -r win-x86 -o release/win32
+      run: dotnet publish PolyVase.csproj --sc -c Release -r win-x86 -o release/win32
     - name: buil linux64
-      run: dotnet publish --sc -c Release -r linux-x64 -o release/linux64
+      run: dotnet publish PolyVase.csproj --sc -c Release -r linux-x64 -o release/linux64
 
   release:
     runs-on: ubuntu-latest
