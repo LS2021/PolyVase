@@ -38,11 +38,11 @@ jobs:
         run: sudo apt-get install zip
 
       - name: pack win64
-        run: zip PolyVase-win64.zip /home/runner/work/PolyVase/PolyVase/release/win64/PolyVase.exe /home/runner/work/PolyVase/PolyVase/README.md /home/runner/work/PolyVase/PolyVase/LICENSE.md
+        run: zip PolyVase-win64.zip release/win64/PolyVase.exe README.md LICENSE.md
       - name: pack win32
-        run: zip PolyVase-win32.zip /home/runner/work/PolyVase/PolyVase/release/win32/PolyVase.exe /home/runner/work/PolyVase/PolyVase/README.md /home/runner/work/PolyVase/PolyVase/LICENSE.md      
+        run: zip PolyVase-win32.zip release/win32/PolyVase.exe README.md LICENSE.md      
       - name: pack linux64
-        run: zip PolyVase-linux64.zip /home/runner/work/PolyVase/PolyVase/release/linux64/PolyVase /home/runner/work/PolyVase/PolyVase/README.md /home/runner/work/PolyVase/PolyVase/LICENSE.md
+        run: zip PolyVase-linux64.zip release/linux64/PolyVase README.md LICENSE.md
         
       - name: Create Draft Release
         id: create_release
