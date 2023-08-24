@@ -41,46 +41,14 @@ jobs:
     - name: pack linux64
       run: zip PolyVase-linux64.zip release/linux64/PolyVase README.md LICENSE.md
       
-    - name: Create Draft Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Create release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: <tofill>
-        release_name: <tofill>
-        draft: true
-        prerelease: false
+        tag: ${{ github.ref_name }}
+      run: gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/} ${tag#v}" --generate-notes
 
-    - uses: actions/upload-release-asset@v1.0.1
+    - name: Upload assets
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./PolyVase-win64.zip
-        asset_name: PolyVase-win64.zip
-        asset_content_type: application/zip
-
-    - uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./PolyVase-win32.zip
-        asset_name: PolyVase-win32.zip
-        asset_content_type: application/zip
-        
-    - uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./PolyVase-linux64.zip
-        asset_name: PolyVase-linux64.zip
-        asset_content_type: application/zip
-
-    - uses: eregon/publish-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        release_id: ${{ steps.create_release.outputs.id }}
+        tag: ${{ github.ref_name }}
+      run: gh release upload "$tag" ./PolyVase-win64.zipp#PolyVase-win64.zip ./PolyVase-win32.zipp#PolyVase-win32.zip ./PolyVase-linux64.zipp#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
