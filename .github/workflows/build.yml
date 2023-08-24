@@ -1,0 +1,96 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+
+name: CD Pipe
+
+on:
+  workflow_dispatch:
+  #push:
+    #branches: [ "master" ]
+  #pull_request:
+    #branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: build win64
+      run: dotnet publish --sc -c Release -r win-x64 -o release/win64
+    - name: build win32
+      run: dotnet publish --sc -c Release -r win-x86 -o release/win32
+    - name: buil linux64
+      run: dotnet publish --sc -c Release -r linux-x64 -o release/linux64
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install zip
+        run: sudo apt install zip
+      - name: install pandoc util
+        run: sudo apt install pandoc
+
+      - name: generate documentation pdf
+        run: pandoc README.md -o README.pdf
+      - name: generate license pdf
+        run: pandoc LICENSE.md -o LICENSE.pdf
+
+      - name: pack win64
+        run: zip PolyVase-win64.zip ./release/win64/PolyVase.exe README.pdf LICENSE.pdf
+      - name: pack win32
+        run: zip PolyVase-win32.zip ./release/win32/PolyVase.exe README.pdf LICENSE.pdf      
+      - name: pack linux64
+        run: zip PolyVase-linux64.zip ./release/linux64/PolyVase README.pdf LICENSE.pdf
+        
+      - name: Create Draft Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: <tofill>
+          release_name: <tofill>
+          draft: true
+          prerelease: false
+
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./PolyVase-win64.zip
+          asset_name: PolyVase-win64.zip
+          asset_content_type: application/zip
+
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./PolyVase-win32.zip
+          asset_name: PolyVase-win32.zip
+          asset_content_type: application/zip
+          
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./PolyVase-linux64.zip
+          asset_name: PolyVase-linux64.zip
+          asset_content_type: application/zip
+
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.create_release.outputs.id }}
