@@ -35,10 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install zip
-        run: sudo apt install zip
+        run: sudo apt-get install zip
 
       - name: set working directory
-        run: cd /home/runner/work/PolyVase/PolyVase
+        run: cd /home/runner/work/PolyVase
       - name: pack win64
         run: zip PolyVase-win64.zip ./release/win64/PolyVase.exe README.md LICENSE.md
       - name: pack win32
