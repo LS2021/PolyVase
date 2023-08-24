@@ -36,20 +36,13 @@ jobs:
     steps:
       - name: install zip
         run: sudo apt install zip
-      - name: install pandoc util
-        run: sudo apt install pandoc
-
-      - name: generate documentation pdf
-        run: pandoc README.md -o README.pdf
-      - name: generate license pdf
-        run: pandoc LICENSE.md -o LICENSE.pdf
 
       - name: pack win64
-        run: zip PolyVase-win64.zip ./release/win64/PolyVase.exe README.pdf LICENSE.pdf
+        run: zip PolyVase-win64.zip ./release/win64/PolyVase.exe README.md LICENSE.md
       - name: pack win32
-        run: zip PolyVase-win32.zip ./release/win32/PolyVase.exe README.pdf LICENSE.pdf      
+        run: zip PolyVase-win32.zip ./release/win32/PolyVase.exe README.md LICENSE.md      
       - name: pack linux64
-        run: zip PolyVase-linux64.zip ./release/linux64/PolyVase README.pdf LICENSE.pdf
+        run: zip PolyVase-linux64.zip ./release/linux64/PolyVase README.md LICENSE.md
         
       - name: Create Draft Release
         id: create_release
