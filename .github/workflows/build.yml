@@ -51,4 +51,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
-      run: gh release upload "$tag" ./PolyVase-win64.zipp#PolyVase-win64.zip ./PolyVase-win32.zipp#PolyVase-win32.zip ./PolyVase-linux64.zipp#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
+      run: gh release upload "$tag" ./PolyVase-win64.zip#PolyVase-win64.zip ./PolyVase-win32.zip#PolyVase-win32.zip ./PolyVase-linux64.zip#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
