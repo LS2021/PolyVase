@@ -44,7 +44,7 @@ jobs:
     - name: Get Tag
       env:
         ref: ${{ github.ref_name }}
-      run:  echo "tag = $ref-$(date +%Y%m%d%H%M%S)" >> GITHUB_ENV
+      run:  echo "tag = $ref-$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
     - name: Create release
       env:
