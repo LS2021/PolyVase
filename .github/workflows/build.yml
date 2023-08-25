@@ -45,10 +45,10 @@ jobs:
     - name: Get Tag
       env:
         ref: ${{ github.ref_name }}
-      run:  echo "tag = $ref-$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+      run:  echo "tag=v-$ref-$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
     - name: Create release
-      run: gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/} ${tag#v}" --generate-notes
+      run: gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/} ${tag}" --generate-notes
 
     - name: Upload assets
       run: gh release upload "$tag" ./PolyVase-win64.zip#PolyVase-win64.zip ./PolyVase-win32.zip#PolyVase-win32.zip ./PolyVase-linux64.zip#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
