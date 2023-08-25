@@ -41,14 +41,17 @@ jobs:
     - name: pack linux64
       run: zip PolyVase-linux64.zip release/linux64/PolyVase README.md LICENSE.md
       
+    - name: Get Tag
+      env:
+        ref: ${{ github.ref_name }}
+      run:  echo "timecode = &ref-$(date +%Y%m%d%H%M%S)" >> GITHUB_ENV
+
     - name: Create release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}
       run: gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/} ${tag#v}" --generate-notes
 
     - name: Upload assets
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}
       run: gh release upload "$tag" ./PolyVase-win64.zip#PolyVase-win64.zip ./PolyVase-win32.zip#PolyVase-win32.zip ./PolyVase-linux64.zip#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
