@@ -13,8 +13,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3
@@ -47,11 +48,7 @@ jobs:
       run:  echo "tag = $ref-$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
     - name: Create release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/} ${tag#v}" --generate-notes
 
     - name: Upload assets
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: gh release upload "$tag" ./PolyVase-win64.zip#PolyVase-win64.zip ./PolyVase-win32.zip#PolyVase-win32.zip ./PolyVase-linux64.zip#PolyVase-linux64.zip --repo="$GITHUB_REPOSITORY"
