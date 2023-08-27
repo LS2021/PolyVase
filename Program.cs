@@ -20,7 +20,7 @@ seed = Console.ReadLine();
 
 do 
 {
-    Console.Write("Pick Height (stl-units): ");
+    Console.Write("Pick height (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out Height));
 
 do
@@ -30,7 +30,7 @@ do
 
 do
 {
-    Console.Write("Pick a Maximum diameter (stl-units): ");
+    Console.Write("Pick a maximum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MaxDia));
 
 do
@@ -45,7 +45,7 @@ do
 
 do
 {
-    Console.Write("Pick a range of the angle (0 to 1):");
+    Console.Write("Pick a range of the angle (0 to 1): ");
 } while (!float.TryParse(Console.ReadLine(), out angleRange) || angleRange < 0 || angleRange > 1);
 
 //use current time in case no seed is provided;
@@ -134,7 +134,45 @@ for(uint idx = 0; idx < triCount; idx ++)
 
 Console.Write("Pick File Save Location: ");
 
-string fileName = Console.ReadLine() ?? "";
+string fileName;
+bool fileOK = false;
+
+do
+{
+    fileName = Console.ReadLine() ?? "";
+    if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+    {
+        Console.Write("Invalid file name. Try again: ");
+    }
+
+    else if (File.Exists(fileName))
+    {
+        Console.WriteLine("File already exists. override (y: yes / n: no):");
+        bool invaildResponse = true;
+        do
+        {
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            switch (key.Key)
+            {
+                case ConsoleKey.Y:
+                    invaildResponse = false;
+                    fileOK = true;
+                break;
+                case ConsoleKey.N:
+                    invaildResponse = false;
+                    Console.Write("Pick a different file name: ");
+                break;
+                default:
+                break;
+            }
+        } while(invaildResponse);
+    }
+
+    else
+    {
+        fileOK = true;
+    }
+} while(!fileOK);
 
 const int stlFileHeadderLength = 80; // stl-header must be exactly 80 bytes long;
 
