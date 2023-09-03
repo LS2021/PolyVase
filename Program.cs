@@ -59,7 +59,7 @@ if (seed == null)
 
 if (Height == float.NaN) do 
 {
-    Console.Write("Pick Height (stl-units): ");
+    Console.Write("Pick a height (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out Height));
 
 if (MinDia == float.NaN) do
@@ -69,7 +69,7 @@ if (MinDia == float.NaN) do
 
 if (MaxDia == float.NaN) do
 {
-    Console.Write("Pick a Maximum diameter (stl-units): ");
+    Console.Write("Pick a maximum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MaxDia));
 
 if (facets == 0) do

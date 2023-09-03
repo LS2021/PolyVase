@@ -17,12 +17,19 @@ Optinally it is possible to set up the directory of the executable file with the
 
 ## Usage
 1. Run the Executable with ```PolyVase``` (full or relative path necassary if ```PATH``` is not set up).
-2. ou will be prompted with the following
-    1. A seed value, can be anything. Since the program is deterministic, using the same seed (identical other parameters) will always produre an identical output.
-    2. The dimensions of the model.
-    3. The number of vertical cuts.
-    4. The nuber of vertecies.
-    5. the amout of random variation
+2. The Model Parameters are can be specified directly via command line Paramters, otherwise the user will be promted to enter them.
+
+    | Parameter | Command Line Argument | Valid Inputs |
+    | --- | --- | --- |
+    | seed | ```-seed``` | any string |
+    | height | ```-height``` | any decimal number |
+    | maximum diameter | ```-max-diameter```  | any decimal number |
+    | minimum diameter | ```-min-diameter``` | any decimal number |
+    | number of cuts | ```-cuts```  | any integer greater or equal to 0 |
+    | number of facets | ```-facets``` | any integer greater or equal to 3 |
+    | angle range | ```-angle-range``` | decimal numbers between 0 and 1 |
+    | file save location | ```-out``` | valid file parths |
+
 3. The save location for the output *.stl -file
 
 ## Build with dotnet cli
