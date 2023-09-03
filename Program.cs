@@ -3,47 +3,86 @@ using System.Text;
 
 //Prameters
 
-string? seed;
-float Height;
-float MinDia;
-float MaxDia;
+string? seed = null;
+float Height = float.NaN;
+float MinDia = float.NaN;
+float MaxDia = float.NaN;
 
-uint cuts;
-uint facets;
+uint cuts = uint.MaxValue;
+uint facets = 0;
 
-float angleRange;
+float angleRange = float.NaN;
 
-Console.Write("Pick A seed: ");
-seed = Console.ReadLine();
+string? fileName = null;
+
+for(int i = 0; i < args.Length; i++)
+{
+    if(i + 1 < args.Length)
+    {
+        switch (args[i].ToLower())
+        {
+            case "-seed":
+                seed = args[++i];
+                break;
+            case "-height":
+                float.TryParse(args[++i], out Height);
+                break;
+            case "-min-diameter":
+                float.TryParse(args[++i], out MinDia);
+                break;
+            case "-max-diameter":
+                float.TryParse(args[++i], out MaxDia);
+                break;
+            case "-cuts":
+                uint.TryParse(args[++i], out cuts);
+                break;
+            case "-facets":
+                uint.TryParse(args[++i], out facets);
+                break;
+            case "-angle-range":
+                float.TryParse(args[++i], out angleRange);
+                break;
+            case "-out":
+                fileName = args[++i];
+                break;                                        
+        }   
+    }
+}
+
+if (seed == null)
+{
+    Console.Write("Pick A seed: ");
+    seed = Console.ReadLine();
+}
 
 //Prompt and get required Inputs
 
-do 
+if (Height == float.NaN) do 
 {
-    Console.Write("Pick height (stl-units): ");
+    Console.Write("Pick a height (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out Height));
 
-do
+if (MinDia == float.NaN) do
 {
     Console.Write("Pick a minimum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MinDia));
 
-do
+if (MaxDia == float.NaN) do
 {
     Console.Write("Pick a maximum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MaxDia));
 
-do
+if (facets == 0) do
 {
     Console.Write("Pick a number of facets (3 or more): ");
 } while (!uint.TryParse(Console.ReadLine(), out facets) ||facets < 3);
 
-do
+if (cuts == uint.MaxValue) do
 {
     Console.Write("Pick a number of cuts (0 or more): ");
 } while (!uint.TryParse(Console.ReadLine(), out cuts) || cuts < 0);
 
-do
+if (angleRange == float.NaN) do
 {
     Console.Write("Pick a range of the angle (0 to 1): ");
 } while (!float.TryParse(Console.ReadLine(), out angleRange) || angleRange < 0 || angleRange > 1);
@@ -131,48 +170,50 @@ for(uint idx = 0; idx < triCount; idx ++)
     triangles[idx].n = Vector3.Normalize(Vector3.Cross(A - C, B - C));
 }
 
-
-Console.Write("Pick File Save Location: ");
-
-string fileName;
-bool fileOK = false;
-
-do
+if (fileName == null)
 {
+    Console.Write("Pick File Save Location: ");
     fileName = Console.ReadLine() ?? "";
-    if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-    {
-        Console.Write("Invalid file name. Try again: ");
-    }
+    
+    bool fileOK = false;
 
-    else if (File.Exists(fileName))
+    do
     {
-        Console.WriteLine("File already exists. override (y: yes / n: no):");
-        bool invaildResponse = true;
-        do
+        fileName = Console.ReadLine() ?? "";
+        if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
         {
-            ConsoleKeyInfo key = Console.ReadKey(true);
-            switch (key.Key)
-            {
-                case ConsoleKey.Y:
-                    invaildResponse = false;
-                    fileOK = true;
-                break;
-                case ConsoleKey.N:
-                    invaildResponse = false;
-                    Console.Write("Pick a different file name: ");
-                break;
-                default:
-                break;
-            }
-        } while(invaildResponse);
-    }
+            Console.Write("Invalid file name. Try again: ");
+        }
 
-    else
-    {
-        fileOK = true;
-    }
-} while(!fileOK);
+        else if (File.Exists(fileName))
+        {
+            Console.WriteLine("File already exists. override (y: yes / n: no):");
+            bool invaildResponse = true;
+            do
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.Y:
+                        invaildResponse = false;
+                        fileOK = true;
+                    break;
+                    case ConsoleKey.N:
+                        invaildResponse = false;
+                        Console.Write("Pick a different file name: ");
+                    break;
+                    default:
+                    break;
+                }
+            } while(invaildResponse);
+        }
+
+        else
+        {
+            fileOK = true;
+        }
+    } while(!fileOK);
+}
 
 const int stlFileHeadderLength = 80; // stl-header must be exactly 80 bytes long;
 
