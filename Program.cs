@@ -3,47 +3,86 @@ using System.Text;
 
 //Prameters
 
-string? seed;
-float Height;
-float MinDia;
-float MaxDia;
+string? seed = null;
+float Height = float.NaN;
+float MinDia = float.NaN;
+float MaxDia = float.NaN;
 
-uint cuts;
-uint facets;
+uint cuts = uint.MaxValue;
+uint facets = 0;
 
-float angleRange;
+float angleRange = float.NaN;
 
-Console.Write("Pick A seed: ");
-seed = Console.ReadLine();
+string? fileName = null;
+
+for(int i = 0; i < args.Length; i++)
+{
+    if(i + 1 < args.Length)
+    {
+        switch (args[i].ToLower())
+        {
+            case "-seed":
+                seed = args[++i];
+                break;
+            case "-height":
+                float.TryParse(args[++i], out Height);
+                break;
+            case "-min-diameter":
+                float.TryParse(args[++i], out MinDia);
+                break;
+            case "-max-diameter":
+                float.TryParse(args[++i], out MaxDia);
+                break;
+            case "-cuts":
+                uint.TryParse(args[++i], out cuts);
+                break;
+            case "-facets":
+                uint.TryParse(args[++i], out facets);
+                break;
+            case "-angle-range":
+                float.TryParse(args[++i], out angleRange);
+                break;
+            case "-out":
+                fileName = args[++i];
+                break;                                        
+        }   
+    }
+}
+
+if (seed == null)
+{
+    Console.Write("Pick A seed: ");
+    seed = Console.ReadLine();
+}
 
 //Prompt and get required Inputs
 
-do 
+if (Height == float.NaN) do 
 {
     Console.Write("Pick Height (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out Height));
 
-do
+if (MinDia == float.NaN) do
 {
     Console.Write("Pick a minimum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MinDia));
 
-do
+if (MaxDia == float.NaN) do
 {
     Console.Write("Pick a Maximum diameter (stl-units): ");
 } while (!float.TryParse(Console.ReadLine(), out MaxDia));
 
-do
+if (facets == 0) do
 {
     Console.Write("Pick a number of facets (3 or more): ");
 } while (!uint.TryParse(Console.ReadLine(), out facets) ||facets < 3);
 
-do
+if (cuts == uint.MaxValue) do
 {
     Console.Write("Pick a number of cuts (0 or more): ");
 } while (!uint.TryParse(Console.ReadLine(), out cuts) || cuts < 0);
 
-do
+if (angleRange == float.NaN) do
 {
     Console.Write("Pick a range of the angle (0 to 1):");
 } while (!float.TryParse(Console.ReadLine(), out angleRange) || angleRange < 0 || angleRange > 1);
@@ -132,9 +171,11 @@ for(uint idx = 0; idx < triCount; idx ++)
 }
 
 
-Console.Write("Pick File Save Location: ");
-
-string fileName = Console.ReadLine() ?? "";
+if (fileName == null)
+{
+    Console.Write("Pick File Save Location: ");
+    fileName = Console.ReadLine() ?? "";
+}
 
 const int stlFileHeadderLength = 80; // stl-header must be exactly 80 bytes long;
 
