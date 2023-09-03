@@ -174,8 +174,7 @@ if (fileName == null)
 {
     Console.Write("Pick File Save Location: ");
     fileName = Console.ReadLine() ?? "";
-
-    string fileName;
+    
     bool fileOK = false;
 
     do
