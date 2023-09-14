@@ -1,6 +1,8 @@
 # PolyVase
 ## A short command line program to procedurally create low poly vases for 3D-printing.
 
+![example workflow](https://github.com/LS2021/PolyVase/actions/workflows/build.yml/badge.svg?branch=master)
+
 ## Requirements
 - .NET 7 runtime (earlier versions *might* work)
 - for building from source: c# languge.
@@ -41,4 +43,3 @@ Optinally it is possible to set up the directory of the executable file with the
         - win-x86 for 32 bit (x86)
         - linux-x64 for 64 bit linux
     - ```<output directory>``` needs to be replaced with the chosen path for the chosen output folder
-
